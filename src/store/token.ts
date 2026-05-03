@@ -5,7 +5,7 @@ import type {
   AuthSmsLoginReqVO,
   ILoginForm,
 } from '@/api/login'
-import type { IAuthLoginRes } from '@/api/types/login'
+import type { type AuthPermissionInfo, IAuthLoginRes, isDoubleTokenRes, isSingleTokenRes } from '@/api/types/login'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue' // 修复：导入 computed
 import { useToast } from 'wot-design-uni'
@@ -18,7 +18,6 @@ import {
   register,
   smsLogin,
 } from '@/api/login'
-import { isDoubleTokenRes, isSingleTokenRes } from '@/api/types/login'
 import { isDoubleTokenMode } from '@/utils'
 import { useDictStore } from './dict'
 import { useUserStore } from './user'
@@ -250,6 +249,65 @@ export const useTokenStore = defineStore(
     }
 
     /**
+     * 离线测试登录 - 用于开发调试，跳过网络验证
+     * @param loginForm 登录参数
+     * @returns 本地模拟的登录结果
+     */
+    const offlineLogin = async (loginForm: { username: string, password: string }) => {
+      try {
+        // 生成本地模拟的 token
+        const mockToken = `mock_token_${Date.now()}`
+        const mockAccessToken = `mock_access_token_${Date.now()}`
+        const mockRefreshToken = `mock_refresh_token_${Date.now()}`
+
+        // 构造模拟的登录响应
+        let mockRes: IAuthLoginRes
+        if (isDoubleTokenMode) {
+          mockRes = {
+            accessToken: mockAccessToken,
+            refreshToken: mockRefreshToken,
+            expiresTime: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7天后过期
+          } as IAuthLoginRes
+        } else {
+          mockRes = {
+            token: mockToken,
+            expiresIn: 7 * 24 * 60 * 60, // 7天后过期
+          } as IAuthLoginRes
+        }
+
+        // 设置 token 信息
+        setTokenInfo(mockRes)
+
+        // 创建本地模拟用户信息
+        const userStore = useUserStore()
+        const mockUserInfo: AuthPermissionInfo = {
+          user: {
+            userId: 1,
+            username: loginForm.username || 'admin',
+            nickname: loginForm.username || 'admin',
+            avatar: '/static/images/avatar.png',
+          },
+          roles: ['admin'],
+          permissions: ['*:*:*'],
+        }
+
+        // 直接设置用户信息，跳过获取用户信息的网络请求
+        userStore.setUserInfo(mockUserInfo)
+
+        const dictStore = useDictStore()
+        dictStore.loadDictCache().then()
+
+        toast.success('离线测试登录成功')
+        return mockRes
+      }
+      catch (error) {
+        console.error('离线登录失败:', error)
+        toast.error('离线登录失败')
+        throw error
+      }
+    }
+
+    /**
      * 获取有效的token
      * 注意：在computed中不直接调用异步函数，只做状态判断
      * 实际的刷新操作应由调用方处理
@@ -320,6 +378,7 @@ export const useTokenStore = defineStore(
       login,
       wxLogin,
       logout,
+      offlineLogin,
 
       // 认证状态判断（最常用的）
       hasLogin: hasValidLogin,

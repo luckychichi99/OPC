@@ -5,7 +5,6 @@
 
     <!-- 表单区域 -->
     <view class="form-container">
-      <TenantPicker ref="tenantPickerRef" />
       <view class="input-item">
         <wd-icon name="user" size="20px" color="#1890ff" />
         <wd-input
@@ -51,6 +50,16 @@
         登录
       </wd-button>
 
+      <!-- 离线测试登录 -->
+      <wd-button
+        block
+        class="mt-12rpx"
+        type="default"
+        @click="handleOfflineLogin"
+      >
+        离线测试登录
+      </wd-button>
+
       <!-- 第三方登录 -->
       <view class="mt-100rpx">
         <view class="divider mb-40rpx flex items-center justify-center">
@@ -88,9 +97,8 @@ import {
   REGISTER_PAGE,
 } from '@/router/config'
 import { useTokenStore } from '@/store/token'
-import { ensureDecodeURIComponent, redirectAfterLogin } from '@/utils'
+import { ensureDecodeURIComponent } from '@/utils'
 import Header from './components/header.vue'
-import TenantPicker from './components/tenant-picker.vue'
 import Verify from './components/verifition/verify.vue'
 
 defineOptions({
@@ -109,14 +117,13 @@ definePage({
 const toast = useToast()
 const loading = ref(false) // 加载状态
 const redirectUrl = ref<string>() // 重定向地址
-const tenantPickerRef = ref<InstanceType<typeof TenantPicker>>() // 租户选择器引用
 const captchaEnabled = import.meta.env.VITE_APP_CAPTCHA_ENABLE === 'true' // 验证码开关
 const verifyRef = ref()
 const captchaType = ref('blockPuzzle') // 滑块验证码 blockPuzzle|clickWord
 
 const formData = reactive({
-  username: import.meta.env.VITE_APP_DEFAULT_LOGIN_USERNAME || '',
-  password: import.meta.env.VITE_APP_DEFAULT_LOGIN_PASSWORD || '',
+  username: 'admin',
+  password: '123456',
   captchaVerification: '', // 验证码校验值
 }) // 表单数据
 
@@ -141,9 +148,6 @@ async function getCode() {
 
 /** 登录处理 */
 async function handleLogin() {
-  if (!tenantPickerRef.value?.validate()) {
-    return
-  }
   if (!formData.username) {
     toast.warning('请输入用户名')
     return
@@ -153,6 +157,24 @@ async function handleLogin() {
     return
   }
   await getCode()
+}
+
+/** 离线测试登录 */
+async function handleOfflineLogin() {
+  loading.value = true
+  try {
+    const tokenStore = useTokenStore()
+    await tokenStore.offlineLogin({
+      username: formData.username,
+      password: formData.password,
+    })
+    // 登录成功后直接跳转到首页
+    uni.reLaunch({ url: '/pages/index/index' })
+  } catch (error) {
+    console.error('离线登录失败:', error)
+  } finally {
+    loading.value = false
+  }
 }
 
 async function verifySuccess(params: any) {
@@ -165,8 +187,8 @@ async function verifySuccess(params: any) {
       type: 'username',
       ...formData,
     })
-    // 处理跳转
-    redirectAfterLogin(redirectUrl.value)
+    // 登录成功后直接跳转到首页
+    uni.reLaunch({ url: '/pages/index/index' })
   } finally {
     loading.value = false
   }
