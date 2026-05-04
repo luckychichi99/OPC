@@ -33,8 +33,10 @@ export const LOGIN_PAGE_LIST = [
 // 排除在外的列表，白名单策略指白名单列表，黑名单策略指黑名单列表
 // TODO: 2/3 在 definePage 配置 excludeLoginPath，或者在下面配置 EXCLUDE_LOGIN_PATH_LIST
 export const EXCLUDE_LOGIN_PATH_LIST = [
-  '/pages/xxx/index', // 示例值
-  '/pages-sub/xxx/index', // 示例值
+  '/pages/index/index', // 首页
+  '/pages/diagnosis/index', // 诊断结果
+  '/pages/knowledge/index', // 热门知识
+  '/pages/profile/index', // 我的
   // 注释 by 芋艿：在 mp 环境下，getAllPages 函数还没初始化好，所以不能直接调用。统一优化到 judgeIsExcludePath 函数里面去获取
   // ...excludeLoginPathList, // 都是以 / 开头的 path
 ]

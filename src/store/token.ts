@@ -294,9 +294,6 @@ export const useTokenStore = defineStore(
         // 直接设置用户信息，跳过获取用户信息的网络请求
         userStore.setUserInfo(mockUserInfo)
 
-        const dictStore = useDictStore()
-        dictStore.loadDictCache().then()
-
         toast.success('离线测试登录成功')
         return mockRes
       }
