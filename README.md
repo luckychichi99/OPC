@@ -1,6 +1,6 @@
 
 ```markdown
-# 投必盈 - 智能诊疗系统移动端 (OPC)
+# 投必盈 
 
 基于 [unibest](https://github.com/codercp/unibest) + [yudao-vue-pro](https://github.com/yudaocode/yudao-vue-pro) 构建的高性能移动端诊疗管理系统。
 
