@@ -104,7 +104,7 @@ const menuItems: MenuItem[] = [
 function handleMenuItemClick(item: MenuItem) {
   console.log('点击了', item.title)
   if (item.id === 'diagnosis') {
-    uni.navigateTo({ url: '/pages/diagnosis/index' })
+    uni.switchTab({ url: '/pages/diagnosis/index' })
   } else {
     toast.info(`${item.title}功能开发中`)
   }

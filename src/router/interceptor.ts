@@ -123,13 +123,8 @@ export const navigateToInterceptor = {
 
     // #region 2/2 默认不需要登录的情况(黑名单策略) ---------------------------
     else {
-      // 不需要登录里面的 EXCLUDE_LOGIN_PATH_LIST 表示黑名单，需要重定向到登录页
-      if (judgeIsExcludePath(path)) {
-        FG_LOG_ENABLE && console.log('2 isNeedLogin(黑名单策略) url:', fullPath)
-        toLoginPage({ queryString: redirectQuery })
-        return false // 修改为false，阻止原路由继续执行
-      }
-      return true // 明确表示允许路由继续执行
+      // 已关闭黑名单登录拦截，默认所有页面均可直接访问
+      return true
     }
     // #endregion 2/2 默认不需要登录的情况(黑名单策略) ---------------------------
   },

@@ -28,8 +28,7 @@ const toast = useToast()
 
 function handleServiceClick() {
   console.log('点击联系人工客服')
-  // TODO: 导航到客服页面或打开客服对话
-  toast.info('客服功能开发中')
+  uni.switchTab({ url: '/pages/diagnosis/index' })
 }
 </script>
 

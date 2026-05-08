@@ -132,7 +132,7 @@ function handleReportClick(item: ReportType) {
 
 function handleServiceRecordClick() {
   console.log('点击人工客服记录')
-  toast.info('人工客服记录功能开发中')
+  uni.navigateTo({ url: '/pages/service/index' })
 }
 
 function handleExpertConsultClick() {

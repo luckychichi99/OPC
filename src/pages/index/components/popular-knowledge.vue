@@ -1,10 +1,11 @@
 <template>
   <view class="knowledge-section">
-    <view class="knowledge-header">
+    <view class="knowledge-header" @click="handleViewMore">
       <view class="knowledge-header-icon">
         📖
-      </view>      <text class="knowledge-title">热门知识</text>
-      <text class="view-more" @click="handleViewMore">查看全部 ></text>
+      </view>
+      <text class="knowledge-title">热门知识</text>
+      <text class="view-more">查看全部 ></text>
     </view>
 
     <view class="knowledge-list">
@@ -58,14 +59,12 @@ const knowledgeItems: KnowledgeItem[] = [
 
 function handleItemClick(item: KnowledgeItem) {
   console.log('点击了', item.title)
-  // 导航到知识详情页面
-  uni.navigateTo({ url: '/pages/knowledge/index' })
+  uni.switchTab({ url: '/pages/knowledge/index' })
 }
 
 function handleViewMore() {
   console.log('查看更多知识')
-  // 导航到知识库页面
-  uni.navigateTo({ url: '/pages/knowledge/index' })
+  uni.switchTab({ url: '/pages/knowledge/index' })
 }
 </script>
 

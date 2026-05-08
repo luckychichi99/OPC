@@ -5,7 +5,7 @@ export const LOGIN_STRATEGY_MAP = {
   DEFAULT_NEED_LOGIN: 1, // 白名单策略，默认不可以进入APP，需要强制登录
 }
 // TODO: 1/3 登录策略，默认使用`无需登录策略`，即默认不需要登录就可以访问
-export const LOGIN_STRATEGY = LOGIN_STRATEGY_MAP.DEFAULT_NEED_LOGIN // edit by 芋艿：管理后台，默认需要登录
+export const LOGIN_STRATEGY = LOGIN_STRATEGY_MAP.DEFAULT_NO_NEED_LOGIN
 export const isNeedLoginMode
   = LOGIN_STRATEGY === LOGIN_STRATEGY_MAP.DEFAULT_NEED_LOGIN
 
@@ -32,14 +32,7 @@ export const LOGIN_PAGE_LIST = [
 
 // 排除在外的列表，白名单策略指白名单列表，黑名单策略指黑名单列表
 // TODO: 2/3 在 definePage 配置 excludeLoginPath，或者在下面配置 EXCLUDE_LOGIN_PATH_LIST
-export const EXCLUDE_LOGIN_PATH_LIST = [
-  '/pages/index/index', // 首页
-  '/pages/diagnosis/index', // 诊断结果
-  '/pages/knowledge/index', // 热门知识
-  '/pages/profile/index', // 我的
-  // 注释 by 芋艿：在 mp 环境下，getAllPages 函数还没初始化好，所以不能直接调用。统一优化到 judgeIsExcludePath 函数里面去获取
-  // ...excludeLoginPathList, // 都是以 / 开头的 path
-]
+export const EXCLUDE_LOGIN_PATH_LIST: string[] = []
 
 // 在小程序里面是否使用H5的登录页，默认为 false
 // 如果为 true 则复用 h5 的登录逻辑

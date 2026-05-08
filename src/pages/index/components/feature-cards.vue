@@ -46,7 +46,13 @@ const featureCards: FeatureCard[] = [
 
 function handleCardClick(card: FeatureCard) {
   console.log('点击了', card.title)
-  // TODO: 导航到具体页面
+  if (card.id === 'assessment') {
+    uni.navigateTo({ url: '/pages/evaluation/index' })
+  } else if (card.id === 'brand') {
+    uni.navigateTo({ url: '/pages/brand/index' })
+  } else {
+    uni.navigateTo({ url: '/pages/service/index' })
+  }
 }
 </script>
 
